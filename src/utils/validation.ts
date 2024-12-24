@@ -1,31 +1,30 @@
 import { FormData } from '../types/form';
 
-export const isEligible = (data: FormData): boolean => {
-  // Position check
-  const validPosition = ['full-time', 'flexible'].includes(data.position);
-  
-  // Location check
-  const validLocation = ['tokyo-area', 'planning-to-move'].includes(data.location);
-  
-  // Start timing check
-  const validTiming = ['within-1-month', 'within-2-months', 'within-3-months'].includes(data.startTiming);
-  
-  // Work priority check
-  const validPriority = ['challenging-work', 'product-love', 'none'].includes(data.workPriority);
-  
-  // Job reason check
-  const validReason = ['new-skills', 'none', 'business-growth', 'social-impact'].includes(data.jobReason);
-  
-  // Experience check (average tenure >= 1 year)
-  const averageTenure = data.yearsOfExperience / data.numberOfCompanies;
-  const validExperience = averageTenure >= 1;
+const isValidPosition = (position: string): boolean => 
+  ['full-time', 'flexible'].includes(position);
 
+const isValidLocation = (location: string): boolean => 
+  ['tokyo-area', 'planning-to-move'].includes(location);
+
+const isValidTiming = (timing: string): boolean => 
+  ['within-1-month', 'within-2-months', 'within-3-months'].includes(timing);
+
+const isValidPriority = (priority: string): boolean => 
+  ['challenging-work', 'product-love', 'none'].includes(priority);
+
+const isValidReason = (reason: string): boolean => 
+  ['new-skills', 'none', 'business-growth', 'social-impact'].includes(reason);
+
+const hasMinimumAverageTenure = (years: number, companies: number): boolean => 
+  companies > 0 ? (years / companies) >= 1 : false;
+
+export const isEligible = (data: FormData): boolean => {
   return (
-    validPosition &&
-    validLocation &&
-    validTiming &&
-    validPriority &&
-    validReason &&
-    validExperience
+    isValidPosition(data.position) &&
+    isValidLocation(data.location) &&
+    isValidTiming(data.startTiming) &&
+    isValidPriority(data.workPriority) &&
+    isValidReason(data.jobReason) &&
+    hasMinimumAverageTenure(data.yearsOfExperience, data.numberOfCompanies)
   );
 };
